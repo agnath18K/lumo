@@ -71,7 +71,7 @@ func DefaultConfig() *Config {
 	return &Config{
 		AIProvider:                  "gemini",                 // Default to Gemini
 		GeminiAPIKey:                "",                       // Will be loaded from environment
-		GeminiModel:                 "gemini-2.0-flash-lite",  // Default Gemini model
+		GeminiModel:                 "gemini-2.5-flash",       // Default Gemini model
 		OpenAIAPIKey:                "",                       // Will be loaded from environment
 		OpenAIModel:                 "gpt-3.5-turbo",          // Default OpenAI model
 		OllamaURL:                   "http://localhost:11434", // Default Ollama URL

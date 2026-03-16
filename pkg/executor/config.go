@@ -285,7 +285,7 @@ func (e *Executor) handleModelConfig(args []string, cmd *nlp.Command) (*Result, 
 		// Validate model based on provider
 		switch e.config.AIProvider {
 		case "gemini":
-			validModels := []string{"gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.0-pro"}
+			validModels := []string{"gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"}
 			isValid := false
 			for _, validModel := range validModels {
 				if model == validModel {

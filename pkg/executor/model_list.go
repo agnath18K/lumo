@@ -15,9 +15,9 @@ func (e *Executor) handleModelList(cmd *nlp.Command) (*Result, error) {
 		output = `
 ╭─────────────── 🐦 Available Gemini Models ───────────────╮
 
-  • gemini-2.0-flash-lite  (Fast, efficient for most queries)
-  • gemini-2.0-flash       (Balanced performance and quality)
-  • gemini-2.0-pro         (High quality, more capabilities)
+  • gemini-2.5-pro         (Most capable, complex tasks)
+  • gemini-2.5-flash       (Fast, great balance of speed/quality)
+  • gemini-2.5-flash-lite  (Lightweight, fastest in 2.5 series)
 
   Current model: ` + e.config.GeminiModel + `
 

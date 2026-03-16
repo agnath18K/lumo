@@ -16,8 +16,8 @@ func TestConfigDefaultValues(t *testing.T) {
 		t.Errorf("Expected default AIProvider to be 'gemini', got '%s'", cfg.AIProvider)
 	}
 
-	if cfg.GeminiModel != "gemini-2.0-flash-lite" {
-		t.Errorf("Expected default GeminiModel to be 'gemini-2.0-flash-lite', got '%s'", cfg.GeminiModel)
+	if cfg.GeminiModel != "gemini-2.5-flash" {
+		t.Errorf("Expected default GeminiModel to be 'gemini-2.5-flash', got '%s'", cfg.GeminiModel)
 	}
 
 	if cfg.OpenAIModel != "gpt-3.5-turbo" {

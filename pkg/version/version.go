@@ -8,10 +8,10 @@ import (
 // Version information
 var (
 	// Version is the current version of Lumo
-	Version = "1.0.2"
+	Version = "1.1.0"
 
 	// BuildDate is the date when the binary was built
-	BuildDate = "May 19 2025"
+	BuildDate = "Mar 16 2026"
 
 	// GitCommit is the git commit hash when the binary was built
 	GitCommit = "HEAD"
