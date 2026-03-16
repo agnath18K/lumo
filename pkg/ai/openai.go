@@ -76,8 +76,8 @@ func (c *OpenAIClient) Query(query string) (string, error) {
 		Messages: []OpenAIMessage{
 			{
 				Role: "system",
-				Content: fmt.Sprintf("You are Lumo, an AI assistant in the terminal. Be concise and helpful.\n\n%s\n\nCurrent Working Directory: %s",
-					SystemInstructions, pwd),
+				Content: fmt.Sprintf("You are Lumo, an AI assistant in the terminal. Be concise and helpful.\n\n%s\n\n%s\n\nCurrent Working Directory: %s",
+					SystemInstructions, EnvContext(), pwd),
 			},
 			{
 				Role:    "user",

@@ -74,8 +74,8 @@ func (c *GeminiClient) Query(query string) (string, error) {
 
 	// For Gemini, we need to combine system instructions and user query
 	// as Gemini doesn't support separate system and user roles like OpenAI
-	combinedQuery := fmt.Sprintf("System Instructions: %s\n\nCurrent Working Directory: %s\n\nUser Query: %s",
-		SystemInstructions, pwd, query)
+	combinedQuery := fmt.Sprintf("System Instructions: %s\n\n%s\n\nCurrent Working Directory: %s\n\nUser Query: %s",
+		SystemInstructions, EnvContext(), pwd, query)
 
 	// Create request body
 	reqBody := GeminiRequest{

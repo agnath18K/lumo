@@ -33,6 +33,8 @@ Create a step-by-step plan to accomplish the following task using shell commands
 
 Task: %s
 
+%s
+
 Provide a detailed plan with the following structure:
 1. A brief description of the overall approach
 2. A numbered list of shell commands to execute
@@ -61,7 +63,7 @@ Do not include markdown formatting, code blocks, or any other non-JSON content.
 Ensure all commands are safe to execute and won't cause data loss or system damage.
 Use relative paths when possible and avoid commands that require sudo.
 Limit the plan to at most %d steps.
-`, task.Description, p.config.AgentMaxSteps)
+`, task.Description, ai.EnvContext(), p.config.AgentMaxSteps)
 
 	// Get response from AI
 	response, err := p.aiClient.GetCompletion(ctx, prompt)

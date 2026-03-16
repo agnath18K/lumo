@@ -42,7 +42,7 @@ func (m *Manager) StartNewConversation() *Conversation {
 	defer m.mu.Unlock()
 
 	// Create a new conversation with the chat system instructions
-	conv := NewConversation(ai.ChatInstructions, m.maxMessagesPerConv)
+	conv := NewConversation(ai.ChatInstructions+"\n\n"+ai.EnvContext(), m.maxMessagesPerConv)
 
 	// Add the conversation to the map
 	m.conversations[conv.ID] = conv
@@ -64,7 +64,7 @@ func (m *Manager) GetActiveConversation() *Conversation {
 
 	// If there is no active conversation or it doesn't exist, create a new one
 	if m.activeConversation == "" || m.conversations[m.activeConversation] == nil {
-		conv := NewConversation(ai.ChatInstructions, m.maxMessagesPerConv)
+		conv := NewConversation(ai.ChatInstructions+"\n\n"+ai.EnvContext(), m.maxMessagesPerConv)
 		m.conversations[conv.ID] = conv
 		m.activeConversation = conv.ID
 	}

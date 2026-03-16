@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -213,15 +214,18 @@ func (c *OllamaClient) GenerateChat(messages []Message, systemPrompt string) (st
 
 // Query sends a query to the Ollama API and returns the response
 func (c *OllamaClient) Query(query string) (string, error) {
-	// Use the system prompt for Lumo
-	systemPrompt := "You are Lumo, an AI assistant for the terminal. Provide concise, helpful responses."
+	pwd, err := os.Getwd()
+	if err != nil {
+		pwd = "unknown"
+	}
+	systemPrompt := fmt.Sprintf("%s\n\n%s\n\nCurrent Working Directory: %s",
+		SystemInstructions, EnvContext(), pwd)
 	return c.GenerateText(query, systemPrompt)
 }
 
 // GetCompletion sends a prompt to the Ollama API and returns the completion
 func (c *OllamaClient) GetCompletion(ctx context.Context, prompt string) (string, error) {
-	// Use the system prompt for agent mode
-	systemPrompt := "You are Lumo's agent mode. Generate detailed step-by-step plans for terminal tasks."
+	systemPrompt := fmt.Sprintf("%s\n\n%s", AgentInstructions, EnvContext())
 	return c.GenerateText(prompt, systemPrompt)
 }
 
