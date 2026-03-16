@@ -54,7 +54,7 @@ type GeminiError struct {
 func NewGeminiClient(apiKey string, model string) *GeminiClient {
 	// If model is empty, use a default model
 	if model == "" {
-		model = "gemini-2.5-flash"
+		model = "gemini-2.5-flash-lite"
 	}
 
 	return &GeminiClient{
