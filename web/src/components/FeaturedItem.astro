@@ -1,0 +1,79 @@
+---
+import CodeBlock from './CodeBlock.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  details: string;
+  icon: any;
+  color: string;
+  example: string;
+  index: number;
+}
+
+const { title, description, details, icon: Icon, color, example, index } = Astro.props;
+const isEven = index % 2 === 0;
+
+// Extract color values for gradient
+const colorClass = color.split(' ')[0]; // e.g., "from-blue-500"
+const colorValue = colorClass.split('-')[2]; // e.g., "500"
+const colorBase = colorClass.split('-')[1]; // e.g., "blue"
+---
+
+<div class={`featured-item relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in`} style={`animation-delay: ${index * 150}ms`}>
+  <!-- Background pattern -->
+  <div class="absolute inset-0 opacity-5 dark:opacity-10 bg-hero-pattern pointer-events-none"></div>
+  
+  <!-- Color accent at side -->
+  <div class={`absolute ${isEven ? 'left-0' : 'right-0'} top-0 bottom-0 w-1 bg-gradient-to-b ${color}`}></div>
+  
+  <div class="p-8 md:p-10 flex flex-col lg:flex-row gap-10">
+    <div class="lg:w-1/2 space-y-6">
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <div class={`w-16 h-16 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center text-white shadow-md`}>
+            <Icon className="w-8 h-8 text-white" />
+          </div>
+          <div class={`absolute -inset-1 bg-${colorBase}-${colorValue}/20 rounded-xl blur`}></div>
+        </div>
+        <h2 class="text-3xl font-bold">{title}</h2>
+      </div>
+      
+      <p class="text-lg text-gray-600 dark:text-gray-400">{details}</p>
+      
+      <div class="pt-4">
+        <CodeBlock code={example} language="bash" title="Example" />
+      </div>
+    </div>
+    
+    <div class="lg:w-1/2 flex items-center">
+      <div class="bg-gray-50 dark:bg-gray-800/50 p-8 rounded-xl border border-gray-200 dark:border-gray-700 w-full h-full">
+        <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">{title}</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">{description}</p>
+        
+        <ul class="space-y-3">
+          {details.split('. ').filter(item => item.length > 10).map((item, i) => (
+            <li class="flex items-start gap-2">
+              <span class={`text-${colorBase}-${colorValue} mt-1`}>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+              </span>
+              <span class="text-gray-700 dark:text-gray-300 text-sm">{item}.</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .featured-item {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+  
+  .featured-item:hover {
+    transform: translateY(-5px);
+  }
+</style>

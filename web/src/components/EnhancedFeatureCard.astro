@@ -1,0 +1,87 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  details?: string;
+  icon: any;
+  color: string;
+  example: string;
+  index: number;
+}
+
+const { 
+  title, 
+  description, 
+  details, 
+  icon: Icon, 
+  color, 
+  example,
+  index
+} = Astro.props;
+
+// Generate a unique ID for this card
+const cardId = `feature-card-${index}`;
+
+// Extract color values for gradient
+const colorClass = color.split(' ')[0]; // e.g., "from-blue-500"
+const colorValue = colorClass.split('-')[2]; // e.g., "500"
+const colorBase = colorClass.split('-')[1]; // e.g., "blue"
+---
+
+<div id={cardId} class="feature-card relative overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-xl group">
+  <!-- Color accent at top -->
+  <div class={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${color}`}></div>
+  
+  <!-- Background pattern -->
+  <div class="absolute inset-0 opacity-5 dark:opacity-10 bg-hero-pattern pointer-events-none"></div>
+  
+  <!-- Hover effect gradient -->
+  <div class={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+  
+  <div class="p-8 flex flex-col h-full">
+    <!-- Icon with animated background -->
+    <div class="mb-6 relative">
+      <div class={`w-16 h-16 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110`}>
+        <Icon className="w-8 h-8 text-white" />
+      </div>
+      <div class={`absolute -inset-1 bg-${colorBase}-${colorValue}/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+    </div>
+    
+    <!-- Content -->
+    <div class="space-y-4">
+      <h3 class="text-2xl font-bold group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+        {title}
+      </h3>
+      
+      <p class="text-gray-600 dark:text-gray-400">
+        {description}
+      </p>
+      
+      {details && (
+        <p class="text-gray-500 dark:text-gray-500 text-sm">
+          {details}
+        </p>
+      )}
+    </div>
+    
+    <!-- Example -->
+    <div class="mt-auto pt-6">
+      <div class="text-xs uppercase text-gray-500 dark:text-gray-500 font-medium mb-2">Example</div>
+      <div class="bg-gray-100 dark:bg-gray-800 rounded-md p-3 font-mono text-sm overflow-x-auto text-gray-800 dark:text-gray-300 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
+        <span class="text-primary-600 dark:text-primary-400 select-none">$ </span>
+        <span>{example}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .feature-card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    height: 100%;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+  }
+</style>

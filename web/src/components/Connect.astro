@@ -1,0 +1,146 @@
+---
+import ConnectTerminal from './ConnectTerminal.jsx';
+import CodeBlock from './CodeBlock.astro';
+import { ArrowPathIcon, ComputerDesktopIcon, ServerIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
+
+const serverCommands = `# Start a server to receive files
+lumo connect --receive
+
+# Start a server on a specific port
+lumo connect --receive --port 9000
+
+# Save received files to a specific directory
+lumo connect --receive --path /tmp`;
+
+const clientCommands = `# Connect to a peer at 192.168.1.5:8080
+lumo connect 192.168.1.5
+
+# Connect to a peer on a specific port
+lumo connect 192.168.1.5:9000
+
+# Connect and save files to a specific directory
+lumo connect 192.168.1.5 --path /tmp`;
+
+const features = [
+  {
+    title: 'Duplex File Transfer',
+    description: 'Send and receive files simultaneously between connected peers.',
+    icon: ArrowPathIcon,
+  },
+  {
+    title: 'Simple Server Mode',
+    description: 'Start a server with one command to receive files from any peer.',
+    icon: ServerIcon,
+  },
+  {
+    title: 'Easy Client Connection',
+    description: 'Connect to any peer by specifying their IP address.',
+    icon: ComputerDesktopIcon,
+  },
+  {
+    title: 'Drag & Drop Support',
+    description: 'Simply drag files into the terminal to send them instantly.',
+    icon: DocumentArrowDownIcon,
+  }
+];
+---
+
+<section class="section relative overflow-hidden">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 bg-gray-50 dark:bg-gray-950">
+    <div class="absolute inset-0 opacity-5 dark:opacity-10 bg-hero-pattern"></div>
+  </div>
+
+  <div class="container relative">
+    <div class="text-center mb-10 sm:mb-16">
+      <span class="inline-block px-3 sm:px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
+        File Transfer
+      </span>
+      <h2 class="section-title">Lumo Connect</h2>
+      <p class="section-description mb-6">
+        Transfer files between computers on your local network with a simple, intuitive interface.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+      <!-- Server Terminal -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">Server Mode</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">
+          Start a server to receive files from other computers on your network.
+        </p>
+        <div class="transform hover:scale-[1.01] transition-transform duration-300 shadow-xl">
+          <ConnectTerminal
+            client:only="react"
+            isServer={true}
+            port="8080"
+            savePath="~/Downloads"
+            title="Lumo Connect Server"
+          />
+        </div>
+      </div>
+
+      <!-- Client Terminal -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">Client Mode</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">
+          Connect to a server to send and receive files.
+        </p>
+        <div class="transform hover:scale-[1.01] transition-transform duration-300 shadow-xl">
+          <ConnectTerminal
+            client:only="react"
+            isServer={false}
+            peerIp="192.168.1.5"
+            port="8080"
+            savePath="~/Downloads"
+            title="Lumo Connect Client"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="mb-16">
+      <h3 class="text-2xl font-bold mb-6 text-center">Key Features</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {features.map(feature => (
+          <div class="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
+              <feature.icon className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+            </div>
+            <h4 class="text-lg font-semibold mb-2">{feature.title}</h4>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">{feature.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Command Reference -->
+    <div class="mb-16">
+      <h3 class="text-2xl font-bold mb-6 text-center">Command Reference</h3>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <h4 class="text-lg font-semibold mb-3">Server Commands</h4>
+          <CodeBlock code={serverCommands} language="bash" />
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-3">Client Commands</h4>
+          <CodeBlock code={clientCommands} language="bash" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Usage Notes -->
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+      <h3 class="text-xl font-bold mb-4">Usage Notes</h3>
+      <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+        <li>Both sides can send and receive files simultaneously</li>
+        <li>Drag and drop files into the terminal to send them</li>
+        <li>Type 'select' to open a file browser</li>
+        <li>Press Ctrl+C to stop the connection</li>
+        <li>Files are saved to ~/Downloads by default</li>
+        <li>Only computers on the same local network can connect to each other</li>
+      </ul>
+    </div>
+  </div>
+</section>

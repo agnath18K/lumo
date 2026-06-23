@@ -1,0 +1,218 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CodeBlock from '../components/CodeBlock.astro';
+import CTA from '../components/CTA.astro';
+
+const basicUsage = `# Get help with command-line options
+lumo --help
+
+# Ask how to perform a specific task
+lumo "How do I find large files in Linux?"
+
+# Get help with a specific command
+lumo "How to use grep with multiple patterns?"
+
+# Get explanations for technical concepts
+lumo "What's the difference between TCP and UDP?"
+
+# Show version information
+lumo --version`;
+
+const agentMode = `# Create a backup of documents
+lumo auto:create a backup of my documents folder
+
+# Find and analyze large files
+lumo agent:find all large files in the current directory and show their types
+
+# Set up a development environment
+lumo agent:set up a python virtual environment with flask and sqlalchemy
+
+# Monitor system resources
+lumo agent:monitor CPU and memory usage every 5 seconds`;
+
+const chatMode = `# Start interactive chat mode
+lumo chat
+
+# Ask a direct question in chat format
+lumo chat:Tell me about Linux file permissions
+
+# Ask a specific question
+lumo ask:What is the capital of France?`;
+
+const systemCommands = `# Get a basic health report
+lumo health
+
+# Get a detailed system report
+lumo system
+
+# Check specific system components
+lumo health:memory
+lumo health:disk
+lumo health:cpu
+lumo health:network
+
+# Generate a report with specific focus
+lumo report:performance
+lumo report:security
+lumo report:storage`;
+
+const pipeSupport = `# Analyze directory contents
+ls -la | lumo
+
+# Explain error logs
+cat error.log | lumo
+
+# Understand complex command output
+ps aux | grep python | lumo
+
+# Analyze system information
+dmesg | lumo`;
+
+const connectFeature = `# Start a server to receive files
+lumo connect --receive
+
+# Start a server on a specific port
+lumo connect --receive --port 9000
+
+# Save received files to a specific directory
+lumo connect --receive --path /tmp
+
+# Connect to a peer at 192.168.1.5:8080
+lumo connect 192.168.1.5
+
+# Connect to a peer on a specific port
+lumo connect 192.168.1.5:9000
+
+# Connect and save files to a specific directory
+lumo connect 192.168.1.5 --path /tmp`;
+---
+
+<Layout title="Lumo CLI Documentation - AI-Powered Terminal Assistant" description="Documentation and usage examples for Lumo CLI, the intelligent terminal assistant that helps you navigate the command line with natural language.">
+  <section class="py-20">
+    <div class="container">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Lumo CLI Documentation</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+          Learn how to use Lumo CLI effectively with these examples and guides.
+        </p>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-8">
+        <div class="lg:w-64 flex-shrink-0">
+          <div class="sticky top-24">
+            <nav class="space-y-1">
+              <a href="#basic-usage" class="block py-2 px-3 rounded hover:bg-gray-100 dark:hover:bg-gray-800 font-medium">Basic Usage</a>
+              <a href="#agent-mode" class="block py-2 px-3 rounded hover:bg-gray-100 dark:hover:bg-gray-800 font-medium">Terminal Agent Mode</a>
+              <a href="#chat-mode" class="block py-2 px-3 rounded hover:bg-gray-100 dark:hover:bg-gray-800 font-medium">Chat Mode</a>
+              <a href="#system-commands" class="block py-2 px-3 rounded hover:bg-gray-100 dark:hover:bg-gray-800 font-medium">System Commands</a>
+              <a href="#connect-feature" class="block py-2 px-3 rounded hover:bg-gray-100 dark:hover:bg-gray-800 font-medium">File Transfer</a>
+              <a href="#pipe-support" class="block py-2 px-3 rounded hover:bg-gray-100 dark:hover:bg-gray-800 font-medium">Pipe Support</a>
+              <a href="#configuration" class="block py-2 px-3 rounded hover:bg-gray-100 dark:hover:bg-gray-800 font-medium">Configuration</a>
+            </nav>
+          </div>
+        </div>
+
+        <div class="flex-1 max-w-3xl">
+          <div class="space-y-16">
+            <section id="basic-usage" class="space-y-6">
+              <h2 class="text-3xl font-bold">Basic Usage</h2>
+              <p class="text-gray-600 dark:text-gray-400">
+                The simplest way to use Lumo CLI is by asking questions in natural language. Lumo CLI will process your query and provide the exact command(s) you need, an explanation of how the command works, additional context and examples, and warnings about potential issues.
+              </p>
+              <CodeBlock code={basicUsage} language="bash" />
+            </section>
+
+            <section id="agent-mode" class="space-y-6">
+              <h2 class="text-3xl font-bold">Terminal Agent Mode</h2>
+              <p class="text-gray-600 dark:text-gray-400">
+                Terminal Agent Mode allows Lumo CLI to execute sequences of terminal commands to complete complex tasks. This mode is activated using the <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">auto:</code> or <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">agent:</code> prefix.
+              </p>
+              <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800/30 mb-4">
+                <p class="text-sm text-yellow-800 dark:text-yellow-300">
+                  <strong>Note:</strong> This Terminal Agent Mode in Lumo CLI is specifically for executing terminal commands. It is different from the upcoming Lumo Code extension, which will be dedicated to autonomous coding tasks.
+                </p>
+              </div>
+              <CodeBlock code={agentMode} language="bash" />
+
+              <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800">
+                <h3 class="text-xl font-bold mb-4">Terminal Agent Mode Workflow</h3>
+                <ol class="list-decimal list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                  <li><strong>Plan Generation:</strong> Lumo CLI analyzes your request and generates a detailed plan of shell commands</li>
+                  <li><strong>Plan Review:</strong> The plan is displayed for your review in an interactive REPL interface</li>
+                  <li><strong>Plan Refinement:</strong> You can modify the plan using natural language with the <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">refine</code> command</li>
+                  <li><strong>Execution:</strong> After your approval, Lumo CLI executes the commands sequentially</li>
+                  <li><strong>Real-time Feedback:</strong> Each command's output and status is displayed during execution</li>
+                  <li><strong>Summary:</strong> A comprehensive summary of the execution is provided upon completion</li>
+                </ol>
+              </div>
+            </section>
+
+            <section id="chat-mode" class="space-y-6">
+              <h2 class="text-3xl font-bold">Chat Mode</h2>
+              <p class="text-gray-600 dark:text-gray-400">
+                Chat Mode allows you to have interactive conversations with Lumo CLI about technical topics, terminal usage, and general queries.
+              </p>
+              <CodeBlock code={chatMode} language="bash" />
+            </section>
+
+            <section id="system-commands" class="space-y-6">
+              <h2 class="text-3xl font-bold">System Commands</h2>
+              <p class="text-gray-600 dark:text-gray-400">
+                Lumo CLI provides built-in commands for checking system health and generating reports.
+              </p>
+              <CodeBlock code={systemCommands} language="bash" />
+            </section>
+
+            <section id="connect-feature" class="space-y-6">
+              <h2 class="text-3xl font-bold">File Transfer</h2>
+              <p class="text-gray-600 dark:text-gray-400">
+                Lumo Connect enables seamless file transfer between computers on your local network with a simple, intuitive interface.
+              </p>
+              <div class="bg-primary-50 dark:bg-primary-900/20 p-4 rounded-lg border border-primary-200 dark:border-primary-800/30 mb-4">
+                <p class="text-sm text-primary-800 dark:text-primary-300">
+                  <strong>Tip:</strong> Both sides can send and receive files simultaneously. Drag and drop files into the terminal to send them, or type 'select' to open a file browser.
+                </p>
+              </div>
+              <CodeBlock code={connectFeature} language="bash" />
+
+              <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800">
+                <h3 class="text-xl font-bold mb-4">Lumo Connect Features</h3>
+                <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                  <li><strong>Duplex File Transfer:</strong> Send and receive files simultaneously between connected peers</li>
+                  <li><strong>Simple Server Mode:</strong> Start a server with one command to receive files from any peer</li>
+                  <li><strong>Easy Client Connection:</strong> Connect to any peer by specifying their IP address</li>
+                  <li><strong>Drag & Drop Support:</strong> Simply drag files into the terminal to send them instantly</li>
+                  <li><strong>File Browser Integration:</strong> Type 'select' to open a file browser for selecting files</li>
+                  <li><strong>Custom Save Location:</strong> Specify where to save received files with the --path option</li>
+                </ul>
+              </div>
+            </section>
+
+            <section id="pipe-support" class="space-y-6">
+              <h2 class="text-3xl font-bold">Pipe Support</h2>
+              <p class="text-gray-600 dark:text-gray-400">
+                Lumo CLI can analyze piped input from other commands, providing summaries, explanations, and insights.
+              </p>
+              <CodeBlock code={pipeSupport} language="bash" />
+            </section>
+
+            <section id="configuration" class="space-y-6">
+              <h2 class="text-3xl font-bold">Configuration</h2>
+              <p class="text-gray-600 dark:text-gray-400">
+                Lumo CLI provides extensive configuration options to customize its behavior according to your preferences and requirements.
+              </p>
+              <p class="text-gray-600 dark:text-gray-400">
+                Lumo CLI stores its configuration in <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">~/.config/lumo/config.json</code>. This file is automatically created during the first-time setup but can be manually edited at any time.
+              </p>
+              <p class="text-gray-600 dark:text-gray-400">
+                For more detailed configuration options, please refer to the <a href="https://github.com/agnath18K/lumo_cli" class="text-primary-500 hover:underline" target="_blank">GitHub repository</a>.
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Layout>

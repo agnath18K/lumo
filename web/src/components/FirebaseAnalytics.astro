@@ -1,0 +1,91 @@
+---
+// This component initializes Firebase Analytics
+---
+
+<script>
+  // This component initializes Firebase Analytics if available
+  // It gracefully handles the case when Firebase is not available (e.g., in CI builds)
+
+  // Initialize Firebase Analytics when the page loads
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      // Dynamically import Firebase modules to avoid build errors when Firebase is not available
+      const { initAnalytics } = await import('../utils/firebase');
+
+      try {
+        // Try to import Firebase Analytics
+        const { logEvent } = await import('firebase/analytics');
+
+        // Initialize analytics
+        const analytics = await initAnalytics();
+
+        if (analytics) {
+          console.log('Firebase Analytics initialized successfully');
+
+          // Log page view
+          try {
+            logEvent(analytics, 'page_view', {
+              page_title: document.title,
+              page_location: window.location.href,
+              page_path: window.location.pathname
+            });
+          } catch (error) {
+            console.log('Failed to log page view event');
+          }
+
+          // Track navigation and button click events
+          document.addEventListener('click', (event) => {
+            if (event.target && event.target instanceof Element) {
+              try {
+                // Track link clicks
+                const linkTarget = event.target.closest('a');
+                if (linkTarget instanceof HTMLAnchorElement && linkTarget.href && !linkTarget.href.startsWith('javascript:')) {
+                  logEvent(analytics, 'link_click', {
+                    link_url: linkTarget.href,
+                    link_text: linkTarget.textContent?.trim() || '',
+                    outbound: linkTarget.hostname !== window.location.hostname
+                  });
+                }
+
+                // Track button clicks
+                const buttonTarget = event.target.closest('button') ||
+                                   (event.target.closest('a.btn') ||
+                                   event.target.closest('[role="button"]'));
+
+                if (buttonTarget) {
+                  // Get button identifier (prioritize data-id, then id, then text content, then button type)
+                  const buttonId = buttonTarget.getAttribute('data-id') ||
+                                  buttonTarget.id ||
+                                  buttonTarget.textContent?.trim() ||
+                                  (buttonTarget instanceof HTMLButtonElement ? buttonTarget.type : 'unknown');
+
+                  // Get button location (page path)
+                  const buttonLocation = window.location.pathname;
+
+                  // Get button class for categorization
+                  const buttonClass = buttonTarget.className;
+
+                  // Log the button click event
+                  logEvent(analytics, 'button_click', {
+                    button_id: buttonId,
+                    button_text: buttonTarget.textContent?.trim() || '',
+                    button_location: buttonLocation,
+                    button_class: buttonClass
+                  });
+                }
+              } catch (error) {
+                console.log('Failed to log click event');
+              }
+            }
+          });
+        } else {
+          console.log('Firebase Analytics not initialized - analytics object is null');
+        }
+      } catch (error) {
+        console.log('Firebase Analytics not available, analytics disabled');
+      }
+    } catch (error) {
+      console.log('Firebase module not available, analytics disabled');
+    }
+  });
+</script>

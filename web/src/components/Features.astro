@@ -1,0 +1,106 @@
+---
+import FeatureCard from './FeatureCard.astro';
+import {
+  CommandLineIcon,
+  CpuChipIcon,
+  ArrowPathIcon,
+  ChatBubbleLeftRightIcon,
+  ChartBarIcon,
+  DocumentTextIcon,
+  ArrowsRightLeftIcon
+} from '@heroicons/react/24/outline';
+
+const features = [
+  {
+    title: 'Natural Language Command Processing',
+    description: 'Ask questions in plain English and get the exact terminal commands you need, with detailed explanations.',
+    icon: CommandLineIcon,
+    color: 'from-blue-500 to-cyan-500',
+    example: 'lumo "How do I find large files in Linux?"'
+  },
+  {
+    title: 'Terminal Agent Mode',
+    description: 'Let Lumo CLI execute sequences of terminal commands to complete complex tasks with interactive planning and execution.',
+    icon: CpuChipIcon,
+    color: 'from-purple-500 to-indigo-500',
+    example: 'lumo auto:create a backup of my documents folder'
+  },
+  {
+    title: 'Multi-Provider Support',
+    description: 'Choose between Google Gemini, OpenAI, or Ollama for local AI inference without internet connectivity.',
+    icon: ArrowPathIcon,
+    color: 'from-green-500 to-emerald-500',
+    example: 'lumo config:provider set openai'
+  },
+  {
+    title: 'Chat Mode',
+    description: 'Have conversational interactions with Lumo to get help with technical concepts and terminal usage.',
+    icon: ChatBubbleLeftRightIcon,
+    color: 'from-pink-500 to-rose-500',
+    example: 'lumo chat'
+  },
+  {
+    title: 'System Health Monitoring',
+    description: 'Check system health, generate reports, and monitor performance with simple natural language commands.',
+    icon: ChartBarIcon,
+    color: 'from-amber-500 to-orange-500',
+    example: 'lumo health:memory'
+  },
+  {
+    title: 'File Transfer',
+    description: 'Transfer files between computers on your local network with a simple, intuitive interface.',
+    icon: ArrowsRightLeftIcon,
+    color: 'from-cyan-500 to-blue-500',
+    example: 'lumo connect --receive'
+  },
+  {
+    title: 'Pipe Support',
+    description: 'Pipe command outputs to Lumo for analysis, explanations, and insights about complex terminal output.',
+    icon: DocumentTextIcon,
+    color: 'from-primary-500 to-teal-500',
+    example: 'cat error.log | lumo'
+  }
+];
+---
+
+<section class="section relative overflow-hidden">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 bg-gray-50 dark:bg-gray-950">
+    <div class="absolute inset-0 opacity-5 dark:opacity-10 bg-hero-pattern"></div>
+  </div>
+
+  <div class="container relative">
+    <div class="text-center mb-16">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 text-sm font-medium mb-4">
+        Powerful Features
+      </span>
+      <h2 class="section-title">Enhance Your Terminal Experience</h2>
+      <p class="section-description">
+        Lumo combines AI-powered capabilities with practical terminal utilities to boost your productivity.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {features.map((feature, index) => (
+        <div class="animate-fade-in" style={`animation-delay: ${index * 100}ms`}>
+          <FeatureCard
+            title={feature.title}
+            description={feature.description}
+            icon={feature.icon}
+            color={feature.color}
+            example={feature.example}
+          />
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-16 text-center">
+      <a href="/features" class="btn btn-outline">
+        View All Features
+        <svg class="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

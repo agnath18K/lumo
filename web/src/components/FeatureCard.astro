@@ -1,0 +1,49 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  icon: any;
+  color?: string;
+  example?: string;
+}
+
+const {
+  title,
+  description,
+  icon: Icon,
+  color = "from-primary-500 to-primary-600",
+  example
+} = Astro.props;
+---
+
+<div class="card card-hover h-full group">
+  <div class="p-6 flex flex-col h-full">
+    <!-- Icon -->
+    <div class="mb-5">
+      <div class={`w-12 h-12 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110`}>
+        <Icon className="w-6 h-6 text-white" />
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col gap-3 flex-grow">
+      <h3 class="text-xl font-bold group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+        {title}
+      </h3>
+      <p class="text-gray-600 dark:text-gray-400 text-sm flex-grow">
+        {description}
+      </p>
+
+      <!-- Example -->
+      {example && (
+        <div class="mt-auto pt-4">
+          <div class="text-xs uppercase text-gray-500 dark:text-gray-500 font-medium mb-1">Example</div>
+          <div class="bg-gray-100 dark:bg-gray-800 rounded-md p-2 font-mono text-xs overflow-x-auto text-gray-800 dark:text-gray-300">
+            <span class="text-primary-600 dark:text-primary-400 select-none">$ </span>
+            <span>{example}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</div>

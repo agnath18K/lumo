@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Connect from '../components/Connect.astro';
+import CTA from '../components/CTA.astro';
+---
+
+<Layout title="Lumo Connect - Duplex File Transfer Over LAN" description="Transfer files between computers on your local network with Lumo Connect, a simple and intuitive file transfer tool.">
+  <!-- Hero Section -->
+  <section class="relative py-20 overflow-hidden bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 opacity-5 dark:opacity-10 bg-hero-pattern"></div>
+    </div>
+    
+    <div class="container relative">
+      <div class="max-w-4xl mx-auto text-center">
+        <span class="inline-block px-3 sm:px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 text-xs sm:text-sm font-medium mb-3 sm:mb-4">
+          New Feature
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 md:mb-6">
+          <span class="gradient-text">Lumo Connect</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8">
+          Seamless file transfer between computers on your local network
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/installation" class="btn btn-lg btn-primary">
+            Install Lumo CLI
+          </a>
+          <a href="#demo" class="btn btn-lg btn-outline">
+            See it in action
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div id="demo">
+    <Connect />
+  </div>
+
+  <!-- Call to Action -->
+  <CTA />
+</Layout>

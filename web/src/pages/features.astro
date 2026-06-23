@@ -1,0 +1,156 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FeaturedItem from '../components/FeaturedItem.astro';
+import EnhancedFeatureCard from '../components/EnhancedFeatureCard.astro';
+import CTA from '../components/CTA.astro';
+import {
+  CommandLineIcon,
+  CpuChipIcon,
+  ArrowPathIcon,
+  ChatBubbleLeftRightIcon,
+  ChartBarIcon,
+  DocumentTextIcon,
+  ClipboardDocumentIcon,
+  BoltIcon
+} from '@heroicons/react/24/outline';
+
+const features = [
+  {
+    title: 'Natural Language Command Processing',
+    description: 'Ask questions in plain English and get the exact terminal commands you need, with detailed explanations.',
+    icon: CommandLineIcon,
+    color: 'from-blue-500 to-cyan-500',
+    details: 'Lumo\'s core functionality is its ability to understand natural language queries and translate them into terminal commands. It provides command translation, contextual understanding, command explanation, and intelligent suggestions tailored to your specific needs and environment.',
+    example: 'lumo "How do I find files by content in Linux?"'
+  },
+  {
+    title: 'Terminal Agent Mode',
+    description: 'Let Lumo CLI execute sequences of terminal commands to complete complex tasks with interactive planning and execution.',
+    icon: CpuChipIcon,
+    color: 'from-purple-500 to-indigo-500',
+    details: 'Terminal Agent Mode enables Lumo CLI to function as an autonomous terminal assistant that can plan and execute sequences of commands to complete complex tasks. It includes task planning, interactive REPL interface, step-by-step execution, execution safety, and performance metrics.',
+    example: 'lumo auto:create a backup of my documents folder'
+  },
+  {
+    title: 'Multi-Provider Support',
+    description: 'Choose between Google Gemini, OpenAI, or Ollama for local AI inference without internet connectivity.',
+    icon: ArrowPathIcon,
+    color: 'from-green-500 to-emerald-500',
+    details: 'Lumo offers flexibility in AI provider selection, allowing you to choose the model that best fits your needs. It supports Google Gemini, OpenAI, and Ollama models with seamless integration and fallback mechanisms.',
+    example: 'lumo config:provider set gemini'
+  },
+  {
+    title: 'Chat Mode',
+    description: 'Have conversational interactions with Lumo to get help with technical concepts and terminal usage.',
+    icon: ChatBubbleLeftRightIcon,
+    color: 'from-pink-500 to-rose-500',
+    details: 'Chat Mode allows you to have interactive conversations with Lumo about technical topics, terminal usage, and general queries. It maintains conversation history and context for more natural interactions.',
+    example: 'lumo chat:tell me about Linux file permissions'
+  },
+  {
+    title: 'System Health Monitoring',
+    description: 'Check system health, generate reports, and monitor performance with simple natural language commands.',
+    icon: ChartBarIcon,
+    color: 'from-amber-500 to-orange-500',
+    details: 'Lumo provides built-in commands for checking system health and generating reports. You can monitor CPU, memory, disk usage, and network performance with simple commands.',
+    example: 'lumo health:memory'
+  },
+  {
+    title: 'Pipe Support',
+    description: 'Pipe command outputs to Lumo for analysis, explanations, and insights about complex terminal output.',
+    icon: DocumentTextIcon,
+    color: 'from-primary-500 to-teal-500',
+    details: 'Lumo can analyze piped input from other commands, providing summaries, explanations, and insights. It can identify patterns, highlight anomalies, and explain technical terms or error messages.',
+    example: 'ps aux | grep python | lumo'
+  },
+  {
+    title: 'Clipboard Operations',
+    description: 'Manage clipboard content directly from the terminal with simple commands.',
+    icon: ClipboardDocumentIcon,
+    color: 'from-indigo-500 to-blue-500',
+    details: 'Lumo includes clipboard functionality for viewing, copying, appending, and clearing clipboard content. This is useful for saving command outputs, building complex commands, and transferring text between terminal sessions.',
+    example: 'lumo clipboard "Hello World"'
+  },
+  {
+    title: 'Internet Speed Testing',
+    description: 'Test your internet connection speed directly from the terminal.',
+    icon: BoltIcon,
+    color: 'from-orange-500 to-red-500',
+    details: 'Lumo can measure and report your internet connection speed and quality. You can test download speed, upload speed, and latency with simple commands.',
+    example: 'lumo speed:download'
+  }
+];
+---
+
+<Layout title="Lumo CLI Features - AI-Powered Terminal Assistant" description="Explore the powerful features of Lumo CLI, the intelligent terminal assistant that helps you navigate the command line with natural language.">
+  <!-- Hero Section -->
+  <section class="relative py-20 overflow-hidden bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 opacity-5 dark:opacity-10 bg-hero-pattern"></div>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-primary-500/10 to-transparent rounded-full -mt-20 -mr-20 blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-primary-500/10 to-transparent rounded-full -mb-20 -ml-20 blur-3xl"></div>
+
+    <div class="container relative">
+      <div class="text-center mb-16 max-w-3xl mx-auto">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 text-sm font-medium mb-4">
+          Complete Feature Set
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300">
+          Powerful Features
+        </h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400">
+          Lumo CLI is packed with features designed to enhance your terminal experience and boost productivity.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Features Section -->
+  <section class="py-16 md:py-24 relative">
+    <div class="container relative">
+      <!-- Featured items -->
+      <div class="space-y-16 mb-32">
+        {features.slice(0, 4).map((feature, index) => (
+          <FeaturedItem
+            title={feature.title}
+            description={feature.description}
+            details={feature.details}
+            icon={feature.icon}
+            color={feature.color}
+            example={feature.example}
+            index={index}
+          />
+        ))}
+      </div>
+
+      <!-- Additional features -->
+      <div>
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold mb-4 inline-block bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400">Additional Features</h2>
+          <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            Discover even more powerful capabilities that make Lumo CLI the ultimate terminal assistant.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.slice(4).map((feature, index) => (
+            <EnhancedFeatureCard
+              title={feature.title}
+              description={feature.description}
+              icon={feature.icon}
+              color={feature.color}
+              example={feature.example}
+              index={index}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Layout>
