@@ -47,6 +47,10 @@ func NewExecutor(cfg *config.Config) *Executor {
 		aiClient = ai.NewGeminiClient(cfg.GeminiAPIKey, cfg.GeminiModel)
 	case "ollama":
 		aiClient = ai.NewOllamaClient(cfg.OllamaURL, cfg.OllamaModel)
+	case "claude":
+		aiClient = ai.NewClaudeClient(cfg.ClaudeAPIKey, cfg.ClaudeModel)
+	case "openai-compatible":
+		aiClient = ai.NewOpenAICompatibleClient(cfg.CompatibleAPIKey, cfg.CompatibleModel, cfg.CompatibleBaseURL)
 	default: // Default to OpenAI
 		aiClient = ai.NewOpenAIClient(cfg.OpenAIAPIKey, cfg.OpenAIModel)
 	}

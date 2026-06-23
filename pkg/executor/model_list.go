@@ -21,7 +21,43 @@ func (e *Executor) handleModelList(cmd *nlp.Command) (*Result, error) {
 
   Current model: ` + e.config.GeminiModel + `
 
+  Any model string is accepted; these are suggestions.
+  Newer Gemini releases (e.g. 3.x) may also be available.
+
 ╰──────────────────────────────────────────────────────────╯
+`
+	case "claude":
+		output = `
+╭─────────────── 🐦 Available Claude Models ───────────────╮
+
+  • claude-opus-4-8        (Most capable Opus tier)
+  • claude-sonnet-4-6      (Best speed/intelligence balance)
+  • claude-haiku-4-5       (Fastest, most cost-effective)
+  • claude-fable-5         (Most capable; premium pricing)
+
+  Current model: ` + e.config.ClaudeModel + `
+
+  Any model string is accepted; these are suggestions.
+
+╰──────────────────────────────────────────────────────────╯
+`
+	case "openai-compatible":
+		output = `
+╭───────── 🐦 OpenAI-Compatible Provider ──────────╮
+
+  Endpoint: ` + e.config.CompatibleBaseURL + `
+  Current model: ` + e.config.CompatibleModel + `
+
+  Any model the endpoint serves is accepted, e.g.:
+    • xAI:        grok-*
+    • DeepSeek:   deepseek-*
+    • Mistral:    mistral-*-latest, codestral-latest
+    • Groq:       llama-*, gpt-oss-*
+    • OpenRouter: <vendor>/<model>
+
+  Set the endpoint with: config:compatible set-url <url>
+
+╰──────────────────────────────────────────────────╯
 `
 	case "ollama":
 		// Try to get the list of models from Ollama
@@ -62,11 +98,14 @@ func (e *Executor) handleModelList(cmd *nlp.Command) (*Result, error) {
 		output = `
 ╭─────────────── 🐦 Available OpenAI Models ───────────────╮
 
-  • gpt-3.5-turbo          (Fast, cost-effective)
-  • gpt-4o                 (Advanced capabilities, slower)
-  • gpt-4o-mini            (Balanced performance and quality)
+  • gpt-4o                 (Advanced capabilities)
+  • gpt-4o-mini            (Fast, cost-effective — default)
+  • gpt-4.1                (Strong coding & instruction following)
 
   Current model: ` + e.config.OpenAIModel + `
+
+  Any model string is accepted; these are suggestions.
+  Newer GPT releases may also be available.
 
 ╰──────────────────────────────────────────────────────────╯
 `

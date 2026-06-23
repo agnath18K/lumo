@@ -375,6 +375,8 @@ lumo config:provider show
 lumo config:provider set gemini
 lumo config:provider set openai
 lumo config:provider set ollama
+lumo config:provider set claude
+lumo config:provider set openai-compatible
 
 # List available models for the current provider
 lumo config:model list
@@ -382,8 +384,9 @@ lumo config:model list
 # Show current model
 lumo config:model show
 
-# Set model for current provider
-lumo config:model set gemini-2.0-flash-lite
+# Set model for current provider (any model string is accepted)
+lumo config:model set gemini-2.5-flash-lite
+lumo config:model set claude-sonnet-4-6
 
 # Show API key status
 lumo config:key show
@@ -391,6 +394,8 @@ lumo config:key show
 # Set API key for a provider
 lumo config:key set gemini YOUR_API_KEY
 lumo config:key set openai YOUR_API_KEY
+lumo config:key set claude YOUR_API_KEY
+lumo config:key set openai-compatible YOUR_API_KEY
 
 # Remove API key for a provider
 lumo config:key remove gemini
@@ -403,6 +408,10 @@ lumo config:ollama set http://localhost:11434
 
 # Test connection to Ollama server
 lumo config:ollama test
+
+# Configure an OpenAI-compatible endpoint (xAI, DeepSeek, Mistral, Groq, OpenRouter)
+lumo config:compatible show
+lumo config:compatible set-url https://api.x.ai/v1
 ```
 
 ## Pipe Support

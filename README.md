@@ -36,7 +36,7 @@ Lumo is an intelligent CLI assistant that interprets natural language to help yo
 - **Pipe Support**: Analyze and explain command outputs
 - **Web Interface**: Access Lumo through a browser-based interface
 - **Secure Authentication**: JWT-based authentication for the REST API
-- **Multiple AI Providers**: Support for Google Gemini, OpenAI, and Ollama
+- **Multiple AI Providers**: Google Gemini, OpenAI, Anthropic Claude, Ollama, and any OpenAI-compatible API (xAI Grok, DeepSeek, Mistral, Groq, OpenRouter)
 
 ## 🚀 Installation
 
@@ -45,12 +45,12 @@ Lumo is an intelligent CLI assistant that interprets natural language to help yo
 ```bash
 
 # Using pre-built binary (Linux)
-curl -L https://github.com/agnath18K/lumo/releases/download/v1.0.2/lumo_1.0.2_linux_amd64.tar.gz -o lumo.tar.gz
+curl -L https://github.com/agnath18K/lumo/releases/download/v1.1.0/lumo_1.1.0_linux_amd64.tar.gz -o lumo.tar.gz
 tar -xzf lumo.tar.gz
 sudo mv lumo /usr/local/bin/
 
 # Using Debian package
-curl -L https://github.com/agnath18K/lumo/releases/download/v1.0.2/lumo_1.0.2_amd64.deb -o lumo.deb
+curl -L https://github.com/agnath18K/lumo/releases/download/v1.1.0/lumo_1.1.0_amd64.deb -o lumo.deb
 sudo dpkg -i lumo.deb
 ```
 
@@ -89,6 +89,31 @@ lumo server:start
 # Enable authentication for the REST API
 lumo config:server auth enable
 ```
+
+### Configuring AI providers
+
+```bash
+# List providers and the current selection
+lumo config:provider list
+
+# Anthropic Claude (set ANTHROPIC_API_KEY or use config:key)
+lumo config:key set claude <key>
+lumo config:provider set claude
+lumo config:model set claude-sonnet-4-6      # or claude-opus-4-8 / claude-haiku-4-5 / claude-fable-5
+
+# Any OpenAI-compatible API (xAI, DeepSeek, Mistral, Groq, OpenRouter)
+lumo config:compatible set-url https://api.x.ai/v1
+lumo config:key set openai-compatible <key>
+lumo config:provider set openai-compatible
+lumo config:model set grok-4                  # any model the endpoint serves
+
+# Model IDs are not gated — any string is accepted, so new models work
+# without a CLI update. `config:model list` shows current suggestions.
+```
+
+Provider API keys can also be supplied via environment variables:
+`GEMINI_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, and
+`OPENAI_COMPATIBLE_API_KEY` / `OPENAI_COMPATIBLE_BASE_URL`.
 
 **For complete usage documentation and examples, visit [getlumo.dev/documentation](https://getlumo.dev/documentation)**
 

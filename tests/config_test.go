@@ -20,8 +20,16 @@ func TestConfigDefaultValues(t *testing.T) {
 		t.Errorf("Expected default GeminiModel to be 'gemini-2.5-flash-lite', got '%s'", cfg.GeminiModel)
 	}
 
-	if cfg.OpenAIModel != "gpt-3.5-turbo" {
-		t.Errorf("Expected default OpenAIModel to be 'gpt-3.5-turbo', got '%s'", cfg.OpenAIModel)
+	if cfg.OpenAIModel != "gpt-4o-mini" {
+		t.Errorf("Expected default OpenAIModel to be 'gpt-4o-mini', got '%s'", cfg.OpenAIModel)
+	}
+
+	if cfg.ClaudeModel != "claude-sonnet-4-6" {
+		t.Errorf("Expected default ClaudeModel to be 'claude-sonnet-4-6', got '%s'", cfg.ClaudeModel)
+	}
+
+	if cfg.CompatibleBaseURL != "https://api.x.ai/v1" {
+		t.Errorf("Expected default CompatibleBaseURL to be 'https://api.x.ai/v1', got '%s'", cfg.CompatibleBaseURL)
 	}
 
 	if cfg.OllamaModel != "llama3" {
