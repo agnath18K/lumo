@@ -1,0 +1,64 @@
+---
+interface Props {
+  code: string;
+  language?: string;
+  title?: string;
+}
+
+const { code, language = 'bash', title } = Astro.props;
+---
+
+<div class="code-block rounded-lg overflow-hidden shadow-lg border border-gray-200 dark:border-gray-800 transition-all duration-300 hover:shadow-xl">
+  {title && (
+    <div class="bg-gray-800 px-4 py-3 text-gray-200 text-sm font-mono border-b border-gray-700 flex items-center justify-between">
+      <span>{title}</span>
+      <div class="flex space-x-2">
+        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+      </div>
+    </div>
+  )}
+  <div class="relative">
+    <pre class="bg-terminal-dark text-terminal-light p-5 overflow-x-auto text-sm font-mono"><code class={`language-${language}`}>{code.trim()}</code></pre>
+
+    <!-- Copy button -->
+    <button class="copy-button absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded p-1.5 opacity-0 transition-opacity duration-200 focus:opacity-100" data-code={code.trim()} aria-label="Copy to clipboard">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  .code-block:hover .copy-button {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  // Add copy functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const copyButtons = document.querySelectorAll('.copy-button');
+
+    copyButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const code = button.getAttribute('data-code') || '';
+        navigator.clipboard.writeText(code).then(() => {
+          // Show copied feedback
+          const originalHTML = button.innerHTML;
+          button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          `;
+
+          setTimeout(() => {
+            button.innerHTML = originalHTML;
+          }, 2000);
+        });
+      });
+    });
+  });
+</script>

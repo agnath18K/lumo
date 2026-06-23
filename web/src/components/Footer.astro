@@ -1,0 +1,96 @@
+---
+// No heroicons needed in this component
+import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
+
+const currentYear = new Date().getFullYear();
+
+const footerLinks = [
+  {
+    title: 'Product',
+    links: [
+      { text: 'Features', href: '/features' },
+      { text: 'Documentation', href: '/documentation' },
+      { text: 'Installation', href: '/installation' },
+      { text: 'Code', href: '/code' },
+      { text: 'Changelog', href: 'https://github.com/agnath18K/lumo/releases' }
+    ]
+  },
+  {
+    title: 'Resources',
+    links: [
+      { text: 'GitHub', href: 'https://github.com/agnath18K/lumo' },
+      { text: 'Issues', href: 'https://github.com/agnath18K/lumo/issues' },
+      { text: 'Discussions', href: 'https://github.com/agnath18K/lumo/discussions' }
+    ]
+  },
+  {
+    title: 'Community',
+    links: [
+      { text: 'Twitter', href: 'https://twitter.com/agnath18' },
+      { text: 'LinkedIn', href: 'https://linkedin.com/in/agnath18' }
+    ]
+  }
+];
+---
+
+<footer class="bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+  <div class="container py-8 sm:py-10 md:py-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+      <!-- Logo and description -->
+      <div class="col-span-2 md:col-span-1">
+        <div class="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-md bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden border-2 dark:border-gray-800 shadow-sm">
+            <img src="/bird.png" alt="Bird logo" class="w-5 h-5 sm:w-6 sm:h-6 object-contain" />
+          </div>
+          <span class="text-lg sm:text-xl font-bold">Lumo CLI</span>
+        </div>
+        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-3 sm:mb-4">
+          An intelligent CLI assistant that helps you navigate the terminal with natural language.
+        </p>
+        <div class="flex space-x-4">
+          <a href="https://github.com/agnath18K/lumo" class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center" aria-label="GitHub">
+            <FaGithub className="h-5 w-5 sm:h-6 sm:w-6" />
+          </a>
+          <a href="https://twitter.com/agnath18" class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center" aria-label="Twitter">
+            <FaTwitter className="h-5 w-5 sm:h-6 sm:w-6" />
+          </a>
+          <a href="https://linkedin.com/in/agnath18" class="text-gray-500 hover:text-primary-500 dark:text-gray-400 dark:hover:text-primary-400 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center" aria-label="LinkedIn">
+            <FaLinkedin className="h-5 w-5 sm:h-6 sm:w-6" />
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Footer links -->
+      {footerLinks.map(section => (
+        <div>
+          <h3 class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-3 sm:mb-4">
+            {section.title}
+          </h3>
+          <ul class="space-y-1.5 sm:space-y-2">
+            {section.links.map(link => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 inline-block py-1 min-h-[32px]"
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                >
+                  {link.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+  <div class="mt-8 sm:mt-10 md:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-800">
+    <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm text-center">
+      &copy; {currentYear} Lumo CLI. Built with purpose by
+      <a href="https://github.com/agnath18K" target="_blank" rel="noopener noreferrer" class="text-primary-600 dark:text-primary-400 hover:underline">
+        agnath18
+      </a>
+    </p>
+  </div>
+</footer>

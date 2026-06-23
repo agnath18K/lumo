@@ -1,0 +1,29 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#121212"/>
+  
+  <!-- Background Pattern -->
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.2"/>
+  <rect width="1200" height="630" fill="url(#dots)" opacity="0.3"/>
+  
+  <!-- Logo -->
+  <rect x="150" y="215" width="200" height="200" rx="40" fill="#14b8a6"/>
+  <path d="M250 245C237.297 245 227 255.297 227 268C227 280.703 237.297 291 250 291C262.703 291 273 280.703 273 268C273 255.297 262.703 245 250 245Z" fill="white"/>
+  <path d="M250 301C224.042 301 203 322.042 203 348C203 348 227 357 250 357C273 357 297 348 297 348C297 322.042 275.958 301 250 301Z" fill="white"/>
+  <path d="M297 268C297 255.297 286.703 245 274 245C261.297 245 251 255.297 251 268C251 280.703 261.297 291 274 291C286.703 291 297 280.703 297 268Z" fill="white"/>
+  <path d="M226 268C226 255.297 215.703 245 203 245C190.297 245 180 255.297 180 268C180 280.703 190.297 291 203 291C215.703 291 226 280.703 226 268Z" fill="white"/>
+  <path d="M320 268C320 255.297 309.703 245 297 245C284.297 245 274 255.297 274 268C274 280.703 284.297 291 297 291C309.703 291 320 280.703 320 268Z" fill="white"/>
+  
+  <!-- Text -->
+  <text x="400" y="280" font-family="Inter, sans-serif" font-weight="700" font-size="72" fill="white">Lumo</text>
+  <text x="400" y="350" font-family="Inter, sans-serif" font-weight="400" font-size="36" fill="#14b8a6">AI-Powered Terminal Assistant</text>
+  
+  <!-- Patterns -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#14b8a6" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="1" fill="#14b8a6"/>
+    </pattern>
+  </defs>
+</svg>

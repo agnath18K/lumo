@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-white dark:bg-terminal-dark text-gray-900 dark:text-gray-100 font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl md:text-2xl;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  ::selection {
+    @apply bg-primary-500/20 text-primary-900 dark:text-primary-100;
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2.5 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 shadow-sm hover:shadow min-h-[44px] min-w-[44px];
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary-600 to-primary-500 text-white hover:from-primary-700 hover:to-primary-600 hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-900 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply border border-primary-600 text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:border-primary-400 dark:hover:bg-primary-900/30;
+  }
+
+  .btn-ghost {
+    @apply text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800;
+  }
+
+  .btn-sm {
+    @apply px-3 py-2 text-xs min-h-[36px];
+  }
+
+  .btn-lg {
+    @apply px-5 py-3 text-base min-h-[48px] sm:px-6;
+  }
+
+  .terminal {
+    @apply bg-terminal-dark text-terminal-light p-4 rounded-lg font-mono text-sm overflow-x-auto border border-terminal-border shadow-lg;
+  }
+
+  .terminal-prompt::before {
+    content: "$ ";
+    @apply text-primary-400;
+  }
+
+  .terminal-cursor {
+    @apply inline-block w-2 h-4 bg-primary-400 align-middle animate-terminal-cursor;
+  }
+
+  .card {
+    @apply bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden transition-all duration-200 hover:shadow-md;
+  }
+
+  .card-hover {
+    @apply hover:border-primary-500 dark:hover:border-primary-500 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-secondary-500;
+  }
+
+  .section {
+    @apply py-12 sm:py-16 md:py-24;
+  }
+
+  .section-title {
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4;
+  }
+
+  .section-description {
+    @apply text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto;
+  }
+
+  .command-card {
+    @apply bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-primary-500 dark:hover:border-primary-500 transition-colors;
+  }
+
+  .command-title {
+    @apply text-lg font-semibold mb-2 flex items-center;
+  }
+
+  .command-description {
+    @apply text-gray-600 dark:text-gray-400 mb-3;
+  }
+
+  .command-example {
+    @apply font-mono text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded-md overflow-x-auto;
+  }
+}

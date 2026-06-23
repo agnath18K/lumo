@@ -1,6 +1,8 @@
 # Build artifacts
 build/
 logs/
+# Compiled CLI binary at repo root
+/lumo
 *.deb
 *.changes
 *.buildinfo
@@ -20,3 +22,9 @@ debian/*.log
 .gocache/
 .gopath/
 .gocache/
+
+# Website (web/) artifacts
+web/node_modules/
+web/dist/
+web/.firebase/
+web/.astro/

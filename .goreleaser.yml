@@ -48,7 +48,7 @@ nfpms:
   - package_name: lumo
     file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}"
     vendor: agnath18K
-    homepage: https://github.com/agnath18K/lumo_cli
+    homepage: https://github.com/agnath18K/lumo
     maintainer: agnath18K <agnath18@gmail.com>
     description: |
       AI-powered CLI assistant

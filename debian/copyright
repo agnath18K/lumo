@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: lumo
 Upstream-Contact: agnath18K <agnath18@gmail.com>
-Source: https://github.com/agnath18K/lumo_cli
+Source: https://github.com/agnath18K/lumo
 
 Files: *
 Copyright: 2024 agnath18

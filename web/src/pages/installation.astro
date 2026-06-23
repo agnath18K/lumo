@@ -1,0 +1,119 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CodeBlock from '../components/CodeBlock.astro';
+import CTA from '../components/CTA.astro';
+
+const sourceInstall = `# From source
+git clone https://github.com/agnath18K/lumo.git
+cd lumo
+make build
+sudo make install
+
+# Verify the installation
+lumo --version`;
+
+const binaryInstall = `# Using pre-built binary (Linux)
+curl -L https://github.com/agnath18K/lumo/releases/download/v1.0.2/lumo_1.0.2_linux_amd64.tar.gz -o lumo.tar.gz
+tar -xzf lumo.tar.gz
+sudo mv lumo /usr/local/bin/
+
+# Using Debian package
+curl -L https://github.com/agnath18K/lumo/releases/download/v1.0.2/lumo_1.0.2_amd64.deb -o lumo.deb
+sudo dpkg -i lumo.deb
+
+# Verify the installation
+lumo --version`;
+
+const setupConfig = `# First-time setup will guide you through configuration
+lumo
+
+# Or manually configure providers
+lumo config:provider set gemini
+lumo config:key set gemini YOUR_API_KEY
+
+# Test your configuration
+lumo "Hello, how does the grep command work?"`;
+---
+
+<Layout title="Install Lumo CLI - AI-Powered Terminal Assistant" description="Installation guide for Lumo CLI, the intelligent terminal assistant that helps you navigate the command line with natural language.">
+  <section class="py-20">
+    <div class="container">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Lumo CLI Installation Guide</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+          Get started with Lumo CLI in minutes with these simple installation steps.
+        </p>
+        <div class="flex items-center justify-center gap-2 mt-4">
+          <span class="inline-block h-3 w-3 bg-green-500 rounded-full"></span>
+          <span class="text-sm font-medium text-green-600 dark:text-green-400">Available Now</span>
+        </div>
+      </div>
+
+      <div class="max-w-3xl mx-auto space-y-16">
+        <div class="space-y-8">
+          <h2 class="text-3xl font-bold">Installation Methods</h2>
+
+          <div class="space-y-4">
+            <h3 class="text-2xl font-bold">Method 1: Install from Source</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Building from source ensures you have the latest features and improvements:
+            </p>
+            <CodeBlock code={sourceInstall} language="bash" />
+          </div>
+
+          <div class="space-y-4">
+            <h3 class="text-2xl font-bold">Method 2: Using Pre-built Binaries</h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              The recommended quick approach is to use pre-built binaries for your platform:
+            </p>
+            <CodeBlock code={binaryInstall} language="bash" />
+          </div>
+        </div>
+
+        <div class="space-y-8">
+          <h2 class="text-3xl font-bold">First-Time Setup</h2>
+          <p class="text-gray-600 dark:text-gray-400">
+            When you first run Lumo CLI, it will guide you through an interactive setup process:
+          </p>
+
+          <div class="space-y-6">
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold">1. Configuration Initialization</h3>
+              <p class="text-gray-600 dark:text-gray-400">
+                Lumo CLI automatically creates the necessary configuration directory at <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">~/.config/lumo/</code> and generates default configuration files if they don't exist.
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold">2. AI Provider Selection</h3>
+              <p class="text-gray-600 dark:text-gray-400">
+                You'll be prompted to choose your preferred AI provider:
+              </p>
+              <ul class="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400 ml-4">
+                <li><strong>Google Gemini:</strong> Generally faster with good performance for terminal tasks</li>
+                <li><strong>OpenAI:</strong> May provide more detailed explanations for complex queries</li>
+                <li><strong>Ollama:</strong> Local AI inference without requiring internet connectivity</li>
+              </ul>
+            </div>
+
+            <div class="space-y-2">
+              <h3 class="text-xl font-bold">3. API Key Configuration</h3>
+              <p class="text-gray-600 dark:text-gray-400">
+                You'll need to provide API keys for your chosen provider(s):
+              </p>
+              <ul class="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400 ml-4">
+                <li>For <strong>Gemini:</strong> Get your API key from <a href="https://aistudio.google.com/apikey" class="text-primary-500 hover:underline" target="_blank">Google AI Studio</a></li>
+                <li>For <strong>OpenAI:</strong> Get your API key from <a href="https://platform.openai.com/api-keys" class="text-primary-500 hover:underline" target="_blank">OpenAI Platform</a></li>
+                <li>For <strong>Ollama:</strong> Provide the URL where Ollama is running (default: http://localhost:11434)</li>
+              </ul>
+            </div>
+
+            <CodeBlock code={setupConfig} language="bash" title="Setup & Configuration" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Layout>
