@@ -4,9 +4,9 @@ Priority: optional
 Maintainer: agnath18K <agnath18@gmail.com>
 Build-Depends: debhelper-compat (= 13), golang-go (>= 1.22)
 Standards-Version: 4.6.0
-Homepage: https://github.com/agnath18K/lumo_cli
-Vcs-Browser: https://github.com/agnath18K/lumo_cli
-Vcs-Git: https://github.com/agnath18K/lumo_cli.git
+Homepage: https://github.com/agnath18K/lumo
+Vcs-Browser: https://github.com/agnath18K/lumo
+Vcs-Git: https://github.com/agnath18K/lumo.git
 Rules-Requires-Root: no
 
 Package: lumo

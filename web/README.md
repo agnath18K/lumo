@@ -13,7 +13,7 @@
 
 ## About
 
-This repository contains the official documentation website for [Lumo CLI](https://github.com/agnath18K/lumo_cli), an AI-powered terminal assistant that helps users navigate the command line more efficiently.
+This repository contains the official documentation website for [Lumo CLI](https://github.com/agnath18K/lumo), an AI-powered terminal assistant that helps users navigate the command line more efficiently.
 
 ## Website Details
 
