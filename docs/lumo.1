@@ -145,7 +145,7 @@ List available AI providers.
 Show current AI provider.
 .TP
 .B lumo config:provider set \fIPROVIDER\fR
-Set AI provider (gemini, openai, ollama).
+Set AI provider (gemini, openai, ollama, claude, openai-compatible).
 .TP
 .B lumo config:model list
 List available models for the current provider.
@@ -182,6 +182,12 @@ Set Ollama URL.
 .TP
 .B lumo config:ollama test
 Test connection to Ollama server.
+.TP
+.B lumo config:compatible show
+Show the OpenAI-compatible endpoint base URL and model.
+.TP
+.B lumo config:compatible set-url \fIURL\fR
+Set the OpenAI-compatible endpoint base URL (e.g. https://api.x.ai/v1).
 
 .SS File Transfer with Connect
 Transfer files between machines:
@@ -469,23 +475,20 @@ Configuration file that stores user preferences, API keys, and other settings.
 
 .SH ENVIRONMENT
 .TP
-.B LUMO_AI_PROVIDER
-Sets the AI provider to use (gemini, openai, ollama).
-.TP
-.B LUMO_GEMINI_API_KEY
+.B GEMINI_API_KEY
 Sets the API key for Google Gemini.
 .TP
-.B LUMO_OPENAI_API_KEY
+.B OPENAI_API_KEY
 Sets the API key for OpenAI.
 .TP
-.B LUMO_OLLAMA_URL
-Sets the URL for the Ollama server.
+.B ANTHROPIC_API_KEY
+Sets the API key for Anthropic Claude.
 .TP
-.B LUMO_ENABLE_AGENT_MODE
-Enables or disables agent mode.
+.B OPENAI_COMPATIBLE_API_KEY
+Sets the API key for the OpenAI-compatible provider (xAI, DeepSeek, Mistral, Groq, OpenRouter).
 .TP
-.B LUMO_DEBUG
-Enables or disables debug mode.
+.B OPENAI_COMPATIBLE_BASE_URL
+Sets the base URL for the OpenAI-compatible provider (e.g. https://api.x.ai/v1).
 
 .SH SEE ALSO
 .BR curl (1),

@@ -19,6 +19,13 @@ type Config struct {
 	OpenAIModel  string `json:"openai_model"`
 	OllamaURL    string `json:"ollama_url"`
 	OllamaModel  string `json:"ollama_model"`
+	ClaudeAPIKey string `json:"claude_api_key"`
+	ClaudeModel  string `json:"claude_model"`
+
+	// OpenAI-compatible provider (xAI, DeepSeek, Mistral, Groq, OpenRouter, ...)
+	CompatibleBaseURL string `json:"compatible_base_url"`
+	CompatibleAPIKey  string `json:"compatible_api_key"`
+	CompatibleModel   string `json:"compatible_model"`
 
 	// Terminal settings
 	MaxHistorySize           int  `json:"max_history_size"`
@@ -73,9 +80,14 @@ func DefaultConfig() *Config {
 		GeminiAPIKey:                "",                       // Will be loaded from environment
 		GeminiModel:                 "gemini-2.5-flash-lite",   // Default Gemini model
 		OpenAIAPIKey:                "",                       // Will be loaded from environment
-		OpenAIModel:                 "gpt-3.5-turbo",          // Default OpenAI model
+		OpenAIModel:                 "gpt-4o-mini",            // Default OpenAI model
 		OllamaURL:                   "http://localhost:11434", // Default Ollama URL
 		OllamaModel:                 "llama3",                 // Default Ollama model
+		ClaudeAPIKey:                "",                       // Will be loaded from environment
+		ClaudeModel:                 "claude-sonnet-4-6",      // Default Claude model
+		CompatibleBaseURL:           "https://api.x.ai/v1",    // Default OpenAI-compatible endpoint (xAI Grok)
+		CompatibleAPIKey:            "",                       // Will be loaded from environment
+		CompatibleModel:             "",                       // No default; set per endpoint
 		MaxHistorySize:              1000,
 		EnableLogging:               true,
 		EnableShellInInteractive:    false,    // Shell commands disabled in interactive mode by default
@@ -128,6 +140,17 @@ func Load() (*Config, error) {
 
 	if openaiKey := os.Getenv("OPENAI_API_KEY"); openaiKey != "" {
 		cfg.OpenAIAPIKey = openaiKey
+	}
+
+	if claudeKey := os.Getenv("ANTHROPIC_API_KEY"); claudeKey != "" {
+		cfg.ClaudeAPIKey = claudeKey
+	}
+
+	if compatKey := os.Getenv("OPENAI_COMPATIBLE_API_KEY"); compatKey != "" {
+		cfg.CompatibleAPIKey = compatKey
+	}
+	if compatURL := os.Getenv("OPENAI_COMPATIBLE_BASE_URL"); compatURL != "" {
+		cfg.CompatibleBaseURL = compatURL
 	}
 
 	// Generate JWT secret if not set

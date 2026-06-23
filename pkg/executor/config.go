@@ -72,6 +72,8 @@ func (e *Executor) executeConfigCommand(cmd *nlp.Command) (*Result, error) {
 		return e.handleKeyConfig(parts[1:], cmd)
 	case "ollama":
 		return e.handleOllamaConfig(parts[1:], cmd)
+	case "compatible":
+		return e.handleCompatibleConfig(parts[1:], cmd)
 	case "mode":
 		return e.handleModeConfig(parts[1:], cmd)
 	case "server":
@@ -101,9 +103,11 @@ func (e *Executor) handleProviderConfig(args []string, cmd *nlp.Command) (*Resul
 		output := `
 ╭─────────────── 🐦 Available AI Providers ───────────────╮
 
-  • gemini  (Google's Gemini AI models)
-  • openai  (OpenAI's GPT models)
-  • ollama  (Local Ollama models)
+  • gemini             (Google's Gemini AI models)
+  • openai             (OpenAI's GPT models)
+  • ollama             (Local Ollama models)
+  • claude             (Anthropic's Claude models)
+  • openai-compatible  (Any OpenAI-compatible API: xAI, DeepSeek, Mistral, Groq, OpenRouter)
 
   Current provider: ` + e.config.AIProvider + `
 
@@ -123,18 +127,22 @@ func (e *Executor) handleProviderConfig(args []string, cmd *nlp.Command) (*Resul
 		}, nil
 	case "set":
 		// Set provider
+		const providerHint = "Use 'gemini', 'openai', 'ollama', 'claude', or 'openai-compatible'."
 		if len(args) < 2 {
 			return &Result{
-				Output:     "Missing provider name. Use 'gemini', 'openai', or 'ollama'.",
+				Output:     "Missing provider name. " + providerHint,
 				IsError:    true,
 				CommandRun: cmd.RawInput,
 			}, nil
 		}
 
 		provider := strings.ToLower(args[1])
-		if provider != "gemini" && provider != "openai" && provider != "ollama" {
+		switch provider {
+		case "gemini", "openai", "ollama", "claude", "openai-compatible":
+			// valid
+		default:
 			return &Result{
-				Output:     fmt.Sprintf("Invalid provider: %s. Use 'gemini', 'openai', or 'ollama'.", provider),
+				Output:     fmt.Sprintf("Invalid provider: %s. %s", provider, providerHint),
 				IsError:    true,
 				CommandRun: cmd.RawInput,
 			}, nil
@@ -151,6 +159,20 @@ func (e *Executor) handleProviderConfig(args []string, cmd *nlp.Command) (*Resul
 		if provider == "openai" && e.config.OpenAIAPIKey == "" {
 			return &Result{
 				Output:     "No API key set for OpenAI. Please set an API key first with 'config:key set openai <key>'.",
+				IsError:    true,
+				CommandRun: cmd.RawInput,
+			}, nil
+		}
+		if provider == "claude" && e.config.ClaudeAPIKey == "" {
+			return &Result{
+				Output:     "No API key set for Claude. Please set an API key first with 'config:key set claude <key>'.",
+				IsError:    true,
+				CommandRun: cmd.RawInput,
+			}, nil
+		}
+		if provider == "openai-compatible" && e.config.CompatibleAPIKey == "" {
+			return &Result{
+				Output:     "No API key set for the OpenAI-compatible provider. Set one with 'config:key set openai-compatible <key>' and the endpoint with 'config:compatible set-url <url>'.",
 				IsError:    true,
 				CommandRun: cmd.RawInput,
 			}, nil
@@ -189,6 +211,10 @@ func (e *Executor) handleProviderConfig(args []string, cmd *nlp.Command) (*Resul
 			e.aiClient = ai.NewGeminiClient(e.config.GeminiAPIKey, e.config.GeminiModel)
 		case "ollama":
 			e.aiClient = ai.NewOllamaClient(e.config.OllamaURL, e.config.OllamaModel)
+		case "claude":
+			e.aiClient = ai.NewClaudeClient(e.config.ClaudeAPIKey, e.config.ClaudeModel)
+		case "openai-compatible":
+			e.aiClient = ai.NewOpenAICompatibleClient(e.config.CompatibleAPIKey, e.config.CompatibleModel, e.config.CompatibleBaseURL)
 		default: // Default to OpenAI
 			e.aiClient = ai.NewOpenAIClient(e.config.OpenAIAPIKey, e.config.OpenAIModel)
 		}
@@ -262,6 +288,10 @@ func (e *Executor) handleModelConfig(args []string, cmd *nlp.Command) (*Result, 
 			currentModel = e.config.GeminiModel
 		case "ollama":
 			currentModel = e.config.OllamaModel
+		case "claude":
+			currentModel = e.config.ClaudeModel
+		case "openai-compatible":
+			currentModel = e.config.CompatibleModel
 		default: // OpenAI
 			currentModel = e.config.OpenAIModel
 		}
@@ -282,33 +312,29 @@ func (e *Executor) handleModelConfig(args []string, cmd *nlp.Command) (*Result, 
 
 		model := args[1]
 
-		// Validate model based on provider
-		switch e.config.AIProvider {
-		case "gemini":
-			validModels := []string{"gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"}
-			isValid := false
-			for _, validModel := range validModels {
-				if model == validModel {
-					isValid = true
-					break
+		// Note appended when a model isn't in the curated suggestion list.
+		// Model IDs change frequently, so any non-empty string is accepted —
+		// the suggestion lists are guidance, not a gate.
+		var note string
+		notInList := func(suggestions []string) string {
+			for _, s := range suggestions {
+				if model == s {
+					return ""
 				}
 			}
-			if !isValid {
-				return &Result{
-					Output:     fmt.Sprintf("Invalid Gemini model: %s. Use 'config:model list' to see available models.", model),
-					IsError:    true,
-					CommandRun: cmd.RawInput,
-				}, nil
-			}
+			return fmt.Sprintf(" (not in the suggested list — make sure it's a valid %s model)", e.config.AIProvider)
+		}
 
-			// Set the model
+		// Apply the model based on provider. Ollama keeps its live server check
+		// since the model must actually be pulled locally.
+		switch e.config.AIProvider {
+		case "gemini":
+			note = notInList([]string{"gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"})
 			e.config.GeminiModel = model
-
-			// Reinitialize the AI client with the new model
 			e.aiClient = ai.NewGeminiClient(e.config.GeminiAPIKey, e.config.GeminiModel)
 
 		case "ollama":
-			// For Ollama, we need to check if the model exists
+			// For Ollama, we need to check if the model exists locally
 			ollamaClient := ai.NewOllamaClient(e.config.OllamaURL, e.config.OllamaModel)
 			models, err := ollamaClient.ListModels()
 			if err != nil {
@@ -335,33 +361,22 @@ func (e *Executor) handleModelConfig(args []string, cmd *nlp.Command) (*Result, 
 				}, nil
 			}
 
-			// Set the model
 			e.config.OllamaModel = model
-
-			// Reinitialize the AI client with the new model
 			e.aiClient = ai.NewOllamaClient(e.config.OllamaURL, e.config.OllamaModel)
 
+		case "claude":
+			note = notInList([]string{"claude-opus-4-8", "claude-sonnet-4-6", "claude-haiku-4-5", "claude-fable-5"})
+			e.config.ClaudeModel = model
+			e.aiClient = ai.NewClaudeClient(e.config.ClaudeAPIKey, e.config.ClaudeModel)
+
+		case "openai-compatible":
+			// Any model the configured endpoint serves is valid.
+			e.config.CompatibleModel = model
+			e.aiClient = ai.NewOpenAICompatibleClient(e.config.CompatibleAPIKey, e.config.CompatibleModel, e.config.CompatibleBaseURL)
+
 		default: // OpenAI
-			validModels := []string{"gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini"}
-			isValid := false
-			for _, validModel := range validModels {
-				if model == validModel {
-					isValid = true
-					break
-				}
-			}
-			if !isValid {
-				return &Result{
-					Output:     fmt.Sprintf("Invalid OpenAI model: %s. Use 'config:model list' to see available models.", model),
-					IsError:    true,
-					CommandRun: cmd.RawInput,
-				}, nil
-			}
-
-			// Set the model
+			note = notInList([]string{"gpt-4o", "gpt-4o-mini", "gpt-4.1"})
 			e.config.OpenAIModel = model
-
-			// Reinitialize the AI client with the new model
 			e.aiClient = ai.NewOpenAIClient(e.config.OpenAIAPIKey, e.config.OpenAIModel)
 		}
 
@@ -375,13 +390,78 @@ func (e *Executor) handleModelConfig(args []string, cmd *nlp.Command) (*Result, 
 		}
 
 		return &Result{
-			Output:     fmt.Sprintf("%s model set to: %s", e.config.AIProvider, model),
+			Output:     fmt.Sprintf("%s model set to: %s%s", e.config.AIProvider, model, note),
 			IsError:    false,
 			CommandRun: cmd.RawInput,
 		}, nil
 	default:
 		return &Result{
 			Output:     fmt.Sprintf("Unknown model command: %s. Use 'list', 'show', or 'set'.", args[0]),
+			IsError:    true,
+			CommandRun: cmd.RawInput,
+		}, nil
+	}
+}
+
+// handleCompatibleConfig handles base-URL configuration for the OpenAI-compatible provider.
+func (e *Executor) handleCompatibleConfig(args []string, cmd *nlp.Command) (*Result, error) {
+	if len(args) == 0 {
+		return &Result{
+			Output:     "Missing compatible command. Use 'show' or 'set-url'.",
+			IsError:    true,
+			CommandRun: cmd.RawInput,
+		}, nil
+	}
+
+	switch args[0] {
+	case "show":
+		return &Result{
+			Output: fmt.Sprintf("OpenAI-compatible base URL: %s\nModel: %s\nExamples: https://api.x.ai/v1 (xAI), https://api.deepseek.com/v1 (DeepSeek), https://api.mistral.ai/v1 (Mistral), https://api.groq.com/openai/v1 (Groq), https://openrouter.ai/api/v1 (OpenRouter)",
+				e.config.CompatibleBaseURL, e.config.CompatibleModel),
+			IsError:    false,
+			CommandRun: cmd.RawInput,
+		}, nil
+	case "set-url":
+		if len(args) < 2 {
+			return &Result{
+				Output:     "Missing URL. Usage: config:compatible set-url <url>",
+				IsError:    true,
+				CommandRun: cmd.RawInput,
+			}, nil
+		}
+
+		url := args[1]
+		if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
+			return &Result{
+				Output:     "Invalid URL format. URL must start with http:// or https://",
+				IsError:    true,
+				CommandRun: cmd.RawInput,
+			}, nil
+		}
+		url = strings.TrimSuffix(url, "/")
+		e.config.CompatibleBaseURL = url
+
+		if err := e.config.Save(); err != nil {
+			return &Result{
+				Output:     fmt.Sprintf("Error saving configuration: %v", err),
+				IsError:    true,
+				CommandRun: cmd.RawInput,
+			}, nil
+		}
+
+		// If this is the current provider, reinitialize the client
+		if e.config.AIProvider == "openai-compatible" {
+			e.aiClient = ai.NewOpenAICompatibleClient(e.config.CompatibleAPIKey, e.config.CompatibleModel, e.config.CompatibleBaseURL)
+		}
+
+		return &Result{
+			Output:     fmt.Sprintf("OpenAI-compatible base URL set to: %s", url),
+			IsError:    false,
+			CommandRun: cmd.RawInput,
+		}, nil
+	default:
+		return &Result{
+			Output:     fmt.Sprintf("Unknown compatible command: %s. Use 'show' or 'set-url'.", args[0]),
 			IsError:    true,
 			CommandRun: cmd.RawInput,
 		}, nil
@@ -909,9 +989,10 @@ func (e *Executor) handleKeyConfig(args []string, cmd *nlp.Command) (*Result, er
 		}, nil
 	case "set":
 		// Set API key
+		const keyProviderHint = "Use 'gemini', 'openai', 'claude', or 'openai-compatible'. Note: Ollama doesn't require an API key."
 		if len(args) < 2 {
 			return &Result{
-				Output:     "Missing provider name. Use 'gemini' or 'openai'. Note: Ollama doesn't require an API key.",
+				Output:     "Missing provider name. " + keyProviderHint,
 				IsError:    true,
 				CommandRun: cmd.RawInput,
 			}, nil
@@ -928,29 +1009,34 @@ func (e *Executor) handleKeyConfig(args []string, cmd *nlp.Command) (*Result, er
 		provider := strings.ToLower(args[1])
 		apiKey := args[2]
 
-		if provider != "gemini" && provider != "openai" {
-			return &Result{
-				Output:     fmt.Sprintf("Invalid provider: %s. Use 'gemini' or 'openai'.", provider),
-				IsError:    true,
-				CommandRun: cmd.RawInput,
-			}, nil
-		}
-
-		// Set the API key
-		if provider == "gemini" {
+		// Set the API key, reinitializing the live client if it's the active provider.
+		switch provider {
+		case "gemini":
 			e.config.GeminiAPIKey = apiKey
-
-			// If this is the current provider, reinitialize the client
 			if e.config.AIProvider == "gemini" {
 				e.aiClient = ai.NewGeminiClient(e.config.GeminiAPIKey, e.config.GeminiModel)
 			}
-		} else {
+		case "openai":
 			e.config.OpenAIAPIKey = apiKey
-
-			// If this is the current provider, reinitialize the client
 			if e.config.AIProvider == "openai" {
 				e.aiClient = ai.NewOpenAIClient(e.config.OpenAIAPIKey, e.config.OpenAIModel)
 			}
+		case "claude":
+			e.config.ClaudeAPIKey = apiKey
+			if e.config.AIProvider == "claude" {
+				e.aiClient = ai.NewClaudeClient(e.config.ClaudeAPIKey, e.config.ClaudeModel)
+			}
+		case "openai-compatible":
+			e.config.CompatibleAPIKey = apiKey
+			if e.config.AIProvider == "openai-compatible" {
+				e.aiClient = ai.NewOpenAICompatibleClient(e.config.CompatibleAPIKey, e.config.CompatibleModel, e.config.CompatibleBaseURL)
+			}
+		default:
+			return &Result{
+				Output:     fmt.Sprintf("Invalid provider: %s. %s", provider, keyProviderHint),
+				IsError:    true,
+				CommandRun: cmd.RawInput,
+			}, nil
 		}
 
 		// Save the configuration
@@ -971,7 +1057,7 @@ func (e *Executor) handleKeyConfig(args []string, cmd *nlp.Command) (*Result, er
 		// Remove API key
 		if len(args) < 2 {
 			return &Result{
-				Output:     "Missing provider name. Use 'gemini' or 'openai'. Note: Ollama doesn't require an API key.",
+				Output:     "Missing provider name. Use 'gemini', 'openai', 'claude', or 'openai-compatible'. Note: Ollama doesn't require an API key.",
 				IsError:    true,
 				CommandRun: cmd.RawInput,
 			}, nil
@@ -979,9 +1065,12 @@ func (e *Executor) handleKeyConfig(args []string, cmd *nlp.Command) (*Result, er
 
 		provider := strings.ToLower(args[1])
 
-		if provider != "gemini" && provider != "openai" {
+		switch provider {
+		case "gemini", "openai", "claude", "openai-compatible":
+			// valid
+		default:
 			return &Result{
-				Output:     fmt.Sprintf("Invalid provider: %s. Use 'gemini' or 'openai'.", provider),
+				Output:     fmt.Sprintf("Invalid provider: %s. Use 'gemini', 'openai', 'claude', or 'openai-compatible'.", provider),
 				IsError:    true,
 				CommandRun: cmd.RawInput,
 			}, nil
@@ -997,10 +1086,15 @@ func (e *Executor) handleKeyConfig(args []string, cmd *nlp.Command) (*Result, er
 		}
 
 		// Remove the API key
-		if provider == "gemini" {
+		switch provider {
+		case "gemini":
 			e.config.GeminiAPIKey = ""
-		} else {
+		case "openai":
 			e.config.OpenAIAPIKey = ""
+		case "claude":
+			e.config.ClaudeAPIKey = ""
+		case "openai-compatible":
+			e.config.CompatibleAPIKey = ""
 		}
 
 		// Save the configuration

@@ -1,3 +1,13 @@
+lumo (1.1.0-1) unstable; urgency=medium
+
+  * Version 1.1.0 release
+  * Add Anthropic Claude provider (native Messages API)
+  * Add generic OpenAI-compatible provider (xAI, DeepSeek, Mistral, Groq, OpenRouter)
+  * Permissive model selection: accept any model string with curated suggestions
+  * Modernize default models (OpenAI default now gpt-4o-mini)
+
+ -- agnath18K <agnath18@gmail.com>  Tue, 23 Jun 2026 00:00:00 +0530
+
 lumo (1.0.2-1) unstable; urgency=medium
 
   * Version 1.0.2 release

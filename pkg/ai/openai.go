@@ -11,11 +11,13 @@ import (
 	"strings"
 )
 
-// OpenAIClient implements the Client interface for OpenAI's API
+// OpenAIClient implements the Client interface for OpenAI's API and any
+// OpenAI-compatible endpoint (xAI, DeepSeek, Mistral, Groq, OpenRouter, ...).
 type OpenAIClient struct {
-	apiKey string
-	model  string
-	client *http.Client
+	apiKey  string
+	model   string
+	baseURL string
+	client  *http.Client
 }
 
 // OpenAIRequest represents a request to the OpenAI API
@@ -52,14 +54,42 @@ type OpenAIError struct {
 func NewOpenAIClient(apiKey string, model string) *OpenAIClient {
 	// If model is empty, use a default model
 	if model == "" {
-		model = "gpt-3.5-turbo"
+		model = "gpt-4o-mini"
 	}
 
 	return &OpenAIClient{
-		apiKey: apiKey,
-		model:  model,
-		client: &http.Client{},
+		apiKey:  apiKey,
+		model:   model,
+		baseURL: "https://api.openai.com/v1",
+		client:  &http.Client{},
 	}
+}
+
+// NewOpenAICompatibleClient creates a client for any OpenAI-compatible API by
+// pointing at a custom base URL (e.g. https://api.x.ai/v1). The request and
+// response shapes are identical to OpenAI's /chat/completions endpoint.
+func NewOpenAICompatibleClient(apiKey string, model string, baseURL string) *OpenAIClient {
+	if baseURL == "" {
+		baseURL = "https://api.openai.com/v1"
+	}
+	// Normalize: callers may include a trailing slash.
+	baseURL = strings.TrimRight(baseURL, "/")
+
+	return &OpenAIClient{
+		apiKey:  apiKey,
+		model:   model,
+		baseURL: baseURL,
+		client:  &http.Client{},
+	}
+}
+
+// chatCompletionsURL returns the endpoint for chat completion requests.
+func (c *OpenAIClient) chatCompletionsURL() string {
+	base := c.baseURL
+	if base == "" {
+		base = "https://api.openai.com/v1"
+	}
+	return strings.TrimRight(base, "/") + "/chat/completions"
 }
 
 // Query sends a query to the OpenAI API and returns the response
@@ -94,7 +124,7 @@ func (c *OpenAIClient) Query(query string) (string, error) {
 	}
 
 	// Create HTTP request
-	req, err := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", c.chatCompletionsURL(), bytes.NewBuffer(jsonData))
 	if err != nil {
 		return "", fmt.Errorf("error creating request: %w", err)
 	}
@@ -150,7 +180,7 @@ func (c *OpenAIClient) QueryChat(messages []OpenAIMessage) (string, error) {
 	}
 
 	// Create HTTP request
-	req, err := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", c.chatCompletionsURL(), bytes.NewBuffer(jsonData))
 	if err != nil {
 		return "", fmt.Errorf("error creating request: %w", err)
 	}
@@ -211,7 +241,7 @@ func (c *OpenAIClient) GetCompletion(ctx context.Context, prompt string) (string
 	}
 
 	// Create HTTP request
-	req, err := http.NewRequestWithContext(ctx, "POST", "https://api.openai.com/v1/chat/completions", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequestWithContext(ctx, "POST", c.chatCompletionsURL(), bytes.NewBuffer(jsonData))
 	if err != nil {
 		return "", fmt.Errorf("error creating request: %w", err)
 	}
@@ -330,7 +360,7 @@ func (c *OpenAIClient) ProcessChatMessage(ctx context.Context, conversation stri
 	}
 
 	// Create HTTP request
-	req, err := http.NewRequestWithContext(ctx, "POST", "https://api.openai.com/v1/chat/completions", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequestWithContext(ctx, "POST", c.chatCompletionsURL(), bytes.NewBuffer(jsonData))
 	if err != nil {
 		return "", fmt.Errorf("error creating request: %w", err)
 	}

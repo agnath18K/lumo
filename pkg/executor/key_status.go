@@ -21,6 +21,16 @@ func (e *Executor) handleKeyStatus(cmd *nlp.Command) (*Result, error) {
 		openaiStatus = "Set"
 	}
 
+	claudeStatus := "Not set"
+	if e.config.ClaudeAPIKey != "" {
+		claudeStatus = "Set"
+	}
+
+	compatibleStatus := "Not set"
+	if e.config.CompatibleAPIKey != "" {
+		compatibleStatus = "Set"
+	}
+
 	// Check Ollama connection
 	ollamaStatus := "Not connected"
 	client := &http.Client{
@@ -34,14 +44,16 @@ func (e *Executor) handleKeyStatus(cmd *nlp.Command) (*Result, error) {
 	output := fmt.Sprintf(`
 ╭─────────────────── 🔑 API Key Status ─────────────────────╮
 
-  • Gemini API Key: %s
-  • OpenAI API Key: %s
-  • Ollama Server: %s (%s)
+  • Gemini API Key:            %s
+  • OpenAI API Key:            %s
+  • Claude API Key:            %s
+  • OpenAI-compatible API Key: %s
+  • Ollama Server:             %s (%s)
 
   Current provider: %s
 
 ╰──────────────────────────────────────────────────────────╯
-`, geminiStatus, openaiStatus, ollamaStatus, e.config.OllamaURL, e.config.AIProvider)
+`, geminiStatus, openaiStatus, claudeStatus, compatibleStatus, ollamaStatus, e.config.OllamaURL, e.config.AIProvider)
 
 	return &Result{
 		Output:     output,
